@@ -312,3 +312,42 @@ Para poder subir tu aplicacion a la **Microsoft Store**, debes empaquetarla en f
    * Completa los campos con la informacion del **Microsoft Partner Center** (Nombre del paquete, Publisher ID, version, etc.).
 4. **Firmar el paquete:** Genera y asocia un certificado digital de pruebas para probar la instalacion local, o firma con la clave proporcionada por Microsoft.
 5. **Subir al Partner Center:** Ingresa a tu cuenta de desarrollador de Microsoft, crea una nueva ficha de aplicacion, sube tu archivo `.msix` generado y envialo a revision para su publicacion.
+
+---
+
+## 7. Fichas de Tienda Oficiales y Descripcion Legal (Copy-Paste)
+
+Para garantizar la legalidad bajo la licencia **GNU GPLv3** y las politicas de la **Microsoft Store** (o cualquier App Store/Play Store donde se decida publicar en el futuro), debes utilizar las siguientes plantillas oficiales de descripcion:
+
+### Plantilla de la Ficha en Español
+
+> **PhotoAura Studio (based on GIMP)**
+> 
+> PhotoAura Studio es una potente suite de edicion fotografica y diseño vectorial profesional diseñada para ofrecer una experiencia optimizada, rapida y lista para usar en Windows 10 y 11.
+> 
+> **Características Principales:**
+> * **Interfaz Optimizada:** Configurada con una distribucion de herramientas de alta productividad y atajos de teclado familiares, ideal para creadores de contenido, diseñadores y fotografos.
+> * **Tema Deep Velvet Violet:** Estilo de interfaz diseñado especificamente para reducir la fatiga ocular durante largas sesiones de edicion.
+> * **Iconos Simbólicos Planos:** Carga del tema de iconos vectoriales planos monocromaticos para un acabado limpio y profesional de alta precision.
+> * **Modo Portable Seguro:** Funciona en un sandbox aislado sin interferir con otras instalaciones locales.
+> 
+> **Nota sobre Licencia y Transparencia:**
+> PhotoAura Studio es un producto independiente basado en el motor de codigo abierto GNU Image Manipulation Program (GIMP) y la preconfiguracion de PhotoGIMP de Diolinux, optimizado y empaquetado bajo los terminos de la licencia publica **GNU GPLv3**. 
+> La compra de este paquete en la tienda representa un pago opcional por la conveniencia de una instalacion limpia con un solo clic, actualizaciones automaticas integradas y soporte tecnico dedicado para Windows. Este producto no esta afiliado con el equipo de desarrollo de GIMP ni con Diolinux. El codigo fuente completo de nuestro launcher y scripts de integracion esta a disposicion de la comunidad en nuestro repositorio de GitHub: https://github.com/huskyCodeAI/PhotoAura-Studio
+
+### Plantilla de la Ficha en Inglés (English Storefront Template)
+
+> **PhotoAura Studio (based on GIMP)**
+> 
+> PhotoAura Studio is a powerful professional photo editing and digital design suite optimized for Windows 10 and 11, designed to deliver a streamlined, out-of-the-box creative workflow.
+> 
+> **Key Features:**
+> * **Optimized Workspace:** Pre-configured with a highly productive tool layout and familiar keyboard shortcuts, perfect for content creators, designers, and photographers.
+> * **Deep Velvet Violet Theme:** A modern, dark visual theme designed to minimize eye strain and maximize color focus during long creative sessions.
+> * **Symbolic Flat Icons:** High-contrast, clean vector monochrome icons that provide a professional, precise, and clutter-free interface.
+> * **Secure Portable Mode:** Fully isolated sandbox run environment that will not interfere with other local software installations.
+> 
+> **Licensing and Transparency Notice:**
+> PhotoAura Studio is an independent distribution built upon the open-source GNU Image Manipulation Program (GIMP) engine and the PhotoGIMP layout by Diolinux, compiled and packaged in accordance with the **GNU GPLv3** license terms. 
+> Purchasing this app from the store represents a voluntary payment for the convenience of one-click installation, automatic software updates, and dedicated Windows technical support. This application is not officially affiliated with the GIMP development team or Diolinux. The complete source code of our launcher and packaging scripts is fully open to the public on GitHub: https://github.com/huskyCodeAI/PhotoAura-Studio
+
