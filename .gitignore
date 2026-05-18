@@ -1,0 +1,23 @@
+# Ignorar instaladores y archivos comprimidos pesados descargados
+gimp_setup.exe
+photogimp.zip
+
+# Ignorar la carpeta del motor extraido de GIMP (pesa mas de 1GB y no debe ir a Git)
+build/app/
+
+# Carpetas temporales de compilacion o extraccion
+temp_photogimp/
+obj/
+bin/
+
+# Archivos de configuracion del sistema de desarrollo
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de registro y cache de ejecucion
+*.log
+*.tmp
