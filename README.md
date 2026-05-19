@@ -1,4 +1,4 @@
-# DocumentaciÃ³n Maestra: PhotoAura Studio (GIMP + PhotoGIMP Rebranded)
+﻿# DocumentaciÃ³n Maestra: PhotoAura Studio (GIMP + PhotoGIMP Rebranded)
 
 Este documento contiene la guÃ­a tÃ©cnica completa, la arquitectura del proyecto, el cÃ³digo fuente del lanzador independiente y las plantillas oficiales de publicaciÃ³n en la Microsoft Store para **PhotoAura Studio**. Todo el contenido ha sido adaptado y verificado para cumplir plenamente con la licencia pÃºblica **GNU GPLv3** y las estrictas directrices de marcas registradas de Microsoft.
 
@@ -27,6 +27,10 @@ El proyecto estÃ¡ estructurado de manera modular y limpia para facilitar el ma
 c:\photo\
 â”œâ”€â”€ README.md                      <-- Este documento de documentaciÃ³n maestra
 â”œâ”€â”€ ROADMAP.md                     <-- Seguimiento de fases del ciclo de vida
+├── agente_de_ws\                  <-- Agente portable de Microsoft Store Submission API
+│   ├── README.md                  <-- Indice tecnico del agente
+│   ├── docs\                      <-- Referencia de API y guia portable
+│   └── projects\photoaura\        <-- Identidad y fichas por idioma
 â”œâ”€â”€ src\
 â”‚   â””â”€â”€ Launcher.cs                <-- CÃ³digo fuente C# del lanzador portÃ¡til optimizado
 â”œâ”€â”€ assets\
@@ -200,3 +204,18 @@ Una vez preparado y personalizado el espacio de trabajo en `build\`, este script
 3. **Firma del Binario:** Ejecuta `signtool.exe` sobre el archivo `.msix` para inyectarle la firma digital, permitiendo la instalaciÃ³n en cualquier mÃ¡quina de pruebas local o el envÃ­o directo a la plataforma de Microsoft.
 
 ---
+
+## 7. Publicacion Microsoft Store y Agente WS
+
+La documentacion canonica de tienda, identidad, fichas por idioma y automatizacion de la Microsoft Store vive ahora dentro de `c:\photo\agente_de_ws\`.
+
+Rutas principales:
+
+* `agente_de_ws\README.md` - Indice operativo del agente.
+* `agente_de_ws\docs\official-api-reference.md` - Referencia de la Microsoft Store Submission API oficial para MSI/EXE.
+* `agente_de_ws\docs\portable-project-structure.md` - Guia para reutilizar el agente en otros proyectos.
+* `agente_de_ws\projects\photoaura\identity\store-identity.md` - Identidad Store de PhotoAura.
+* `agente_de_ws\projects\photoaura\listings\en-us.md` - Ficha en ingles.
+* `agente_de_ws\projects\photoaura\listings\es-es.md` - Ficha en espanol.
+
+Esta concentracion evita duplicar textos entre la raiz del repo y el agente, y permite portar `agente_de_ws` a otro producto cambiando `STORE_PROJECT_SLUG`, `STORE_PRODUCT_ID`, `SELLER_ID` y los archivos de `projects\<slug>\`.
