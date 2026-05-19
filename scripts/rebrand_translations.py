@@ -112,21 +112,6 @@ if __name__ == '__main__':
             changed += 1
             print(f"Reemplazado titulo principal: '{trans}' -> '{translations[orig]}'")
             
-        elif orig == "GIMP Image Editor":
-            translations[orig] = u"Editor de imagen PhotoAura Studio"
-            changed += 1
-            print(f"Reemplazado editor: '{trans}' -> '{translations[orig]}'")
-            
-        # 2. Reemplazar menciones en cadenas de la interfaz basadas en el origen
-        elif "GIMP" in orig:
-            # Conservar los creditos originales intactos en la caja de dialogo Acerca de
-            if "Spencer Kimball" in orig or "Peter Mattis" in orig:
-                continue
-            if u"GIMP" in trans:
-                new_trans = trans.replace(u"GIMP", u"PhotoAura Studio")
-                translations[orig] = new_trans
-                changed += 1
-            
     if changed > 0:
         print(f"Se realizaron {changed} reemplazos. Guardando...")
         write_mo(mo_path, translations)

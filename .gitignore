@@ -21,3 +21,25 @@ bin/
 # Archivos de registro y cache de ejecucion
 *.log
 *.tmp
+
+# Credenciales locales
+.env
+**/.env
+
+# Agente de WS y agentes locales
+agente_de_ws/
+.agents/
+.claude/
+
+# Politicas de privacidad (repositorio externo)
+PrivacyPolicies/
+
+# Archivos de empaquetado y firmas (contiene el PFX privado y MSIX pesado)
+packaging/
+
+# Documentacion de agentes y notas de trabajo
+docs/
+
+# Archivos de manifiesto y assets generados en build (excepto el ejecutable principal Lanzador.exe)
+build/AppxManifest.xml
+build/Assets/

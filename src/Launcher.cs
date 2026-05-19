@@ -30,13 +30,19 @@ namespace BrandedGimpLauncher
                 // 1. Obtener la ruta base donde se ejecuta este Lanzador
                 string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-                // 2. Definir la ruta del perfil interno autocompletado con PhotoGIMP
-                string profileDirectory = Path.Combine(baseDirectory, "app", "perfil_photogimp");
+                // 2. Definir la ruta de origen (empaquetada y de solo lectura) y la de destino (escribible)
+                string sourceProfileDir = Path.Combine(baseDirectory, "app", "perfil_photogimp");
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                string profileDirectory = Path.Combine(localAppData, "PhotoAuraStudio", "perfil_photogimp");
 
-                // Crear el directorio de perfil si no existe para evitar fallos de inicio
+                // Copiar el perfil preconfigurado a una zona con permisos de escritura (AppData) si no existe
                 if (!Directory.Exists(profileDirectory))
                 {
                     Directory.CreateDirectory(profileDirectory);
+                    if (Directory.Exists(sourceProfileDir))
+                    {
+                        CopyDirectory(sourceProfileDir, profileDirectory);
+                    }
                 }
 
                 // 3. Establecer las variables de entorno para que GIMP trabaje en modo portable e independiente
@@ -52,6 +58,12 @@ namespace BrandedGimpLauncher
                 {
                     gimpExePath = Path.Combine(baseDirectory, "app", "bin", "gimp.exe");
                 }
+
+                string binDirectory = Path.GetDirectoryName(gimpExePath);
+                
+                // 4.5. Inyectar el directorio bin en la variable PATH para el entorno de MSIX
+                string currentPath = Environment.GetEnvironmentVariable("PATH") ?? "";
+                Environment.SetEnvironmentVariable("PATH", binDirectory + ";" + currentPath);
 
                 // Si no se encuentra GIMP, notificar al usuario de forma amigable
                 if (!File.Exists(gimpExePath))
@@ -98,6 +110,33 @@ namespace BrandedGimpLauncher
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
+            }
+        }
+
+        // Método auxiliar para copiar directorios de forma recursiva
+        private static void CopyDirectory(string sourceDir, string destDir)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDir);
+            if (!dir.Exists) return;
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // Si el destino no existe, lo creamos
+            Directory.CreateDirectory(destDir);
+
+            // Copiar los archivos del directorio actual
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDir, file.Name);
+                file.CopyTo(tempPath, true);
+            }
+
+            // Copiar subdirectorios recursivamente
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string tempPath = Path.Combine(destDir, subdir.Name);
+                CopyDirectory(subdir.FullName, tempPath);
             }
         }
     }

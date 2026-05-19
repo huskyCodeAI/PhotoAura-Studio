@@ -1,62 +1,87 @@
-# Documentacion Maestra: Editor de Fotos Personalizado (GIMP + PhotoGIMP)
+﻿# DocumentaciÃ³n Maestra: PhotoAura Studio (GIMP + PhotoGIMP Rebranded)
 
-Este documento contiene la guia completa, el codigo fuente, la arquitectura tecnica y el plan paso a paso para crear un editor de fotos de marca propia preconfigurado con el diseño de PhotoGIMP y publicarlo en la Microsoft Store para Windows de forma totalmente legal.
+Este documento contiene la guÃ­a tÃ©cnica completa, la arquitectura del proyecto, el cÃ³digo fuente del lanzador independiente y las plantillas oficiales de publicaciÃ³n en la Microsoft Store para **PhotoAura Studio**. Todo el contenido ha sido adaptado y verificado para cumplir plenamente con la licencia pÃºblica **GNU GPLv3** y las estrictas directrices de marcas registradas de Microsoft.
 
 ---
 
 ## 1. Contexto Legal y Viabilidad Comercial
 
 ### Legalidad bajo la Licencia GPLv3
-GIMP y PhotoGIMP estan bajo la licencia publica **GNU GPLv3**. Esto significa:
-* **Venta Comercial Permitida:** Es 100% legal empaquetar este software y cobrar por el en la Microsoft Store.
-* **Obligacion de Compartir el Codigo:** Debes proporcionar a tus compradores acceso al codigo fuente de tu instalador, scripts y modificaciones bajo la misma licencia GPLv3 (por ejemplo, mediante un repositorio publico de GitHub).
-* **Redistribucion:** Los compradores tienen derecho legal a compartir tu software si asi lo deciden, pero la mayoria de los usuarios de la Microsoft Store pagan por la comodidad de la instalacion con un clic, actualizaciones automaticas y soporte.
+GIMP y la distribuciÃ³n de PhotoGIMP estÃ¡n protegidas bajo la licencia pÃºblica **GNU GPLv3**. Bajo estos tÃ©rminos:
+* **Venta Comercial Autorizada:** Es 100% legal empaquetar y vender este software en la Microsoft Store.
+* **Transparencia de CÃ³digo:** Se debe proporcionar acceso al cÃ³digo fuente de nuestro lanzador, scripts y manifiestos de empaquetado bajo la misma licencia GPLv3. Esto se cumple hospedando de forma pÃºblica los scripts y cÃ³digo del lanzador en GitHub: [https://github.com/huskyCodeAI/PhotoAura-Studio](https://github.com/huskyCodeAI/PhotoAura-Studio).
+* **Valor AÃ±adido:** Aunque los usuarios podrÃ­an descargar GIMP de forma gratuita, pagan en la tienda por la comodidad del empaquetado optimizado, atajos preinstalados, instalaciÃ³n rÃ¡pida con un clic, actualizaciones automÃ¡ticas en segundo plano y soporte tÃ©cnico en Windows.
 
-### Reglas de Marca Registrada (Microsoft Store)
-* **Rebranding Obligatorio:** No puedes usar el nombre oficial "GIMP" ni "PhotoGIMP" como titulo principal de la aplicacion ni usar sus logos oficiales como icono principal, ya que violarias la ley de marcas comerciales.
-* **Nombre de Marca Propia:** Debes elegir un nombre nuevo (por ejemplo: *PhotoAura Studio*, *Canvas Creator*, etc.) y mencionar de forma transparente en la descripcion que esta basado en GIMP y PhotoGIMP bajo la licencia GPLv3.
+### Directrices de Marcas de Microsoft Store (SanitizaciÃ³n)
+* **Rebranding Obligatorio:** Para evitar el rechazo por uso indebido de marcas de terceros, el tÃ­tulo oficial de la aplicaciÃ³n y sus recursos grÃ¡ficos de marca se han cambiado a **PhotoAura Studio**.
+* **Cumplimiento de Marcas Registradas:** Se han eliminado por completo referencias a otras suites de software de terceros (como "Photoshop" o "Adobe") dentro de las descripciones del producto y metadatos del instalador, sustituyÃ©ndolos por tÃ©rminos genÃ©ricos pero altamente profesionales como *"Atajos estÃ¡ndar de la industria"* y *"Comandos universales de diseÃ±o"*.
+* **MenciÃ³n Obligatoria del Motor de CÃ³digo Abierto:** Por transparencia legal y cumplimiento de las directrices de Microsoft, se indica explÃ­citamente en la descripciÃ³n que el software estÃ¡ basado en el motor de GIMP.
 
 ---
 
 ## 2. Arquitectura de Carpetas del Proyecto
 
-Para que la aplicacion sea independiente y portable (no altere las instalaciones de GIMP que el usuario ya tenga en su PC), toda la suite se encapsula dentro del directorio local utilizando el modo portable de GIMP.
-
-La estructura final generada sera:
+El proyecto estÃ¡ estructurado de manera modular y limpia para facilitar el mantenimiento y automatizaciÃ³n del empaquetado:
 
 ```text
 c:\photo\
-├── README.md                      <-- Este archivo de documentacion maestra
-├── setup_workspace.ps1           <-- Script PowerShell de automatizacion
-├── src\
-│   └── Launcher.cs               <-- Codigo fuente C# del lanzador portable
-└── build\                        <-- Carpeta final para generar el instalador MSIX
-    ├── Lanzador.exe              <-- Tu ejecutable con tu icono y marca propia
-    └── app\                      <-- Contenedor del motor de GIMP
-        ├── bin\
-        │   └── gimp-2.10.exe    <-- Ejecutable original de GIMP
-        ├── share\
-        ├── lib\
-        └── perfil_photogimp\        <-- Configuracion y temas de PhotoGIMP
-            ├── themes\
-            ├── tool-presets\
-            ├── menurc
-            └── ...
+â”œâ”€â”€ README.md                      <-- Este documento de documentaciÃ³n maestra
+â”œâ”€â”€ ROADMAP.md                     <-- Seguimiento de fases del ciclo de vida
+├── agente_de_ws\                  <-- Agente portable de Microsoft Store Submission API
+│   ├── README.md                  <-- Indice tecnico del agente
+│   ├── docs\                      <-- Referencia de API y guia portable
+│   └── projects\photoaura\        <-- Identidad y fichas por idioma
+â”œâ”€â”€ src\
+â”‚   â””â”€â”€ Launcher.cs                <-- CÃ³digo fuente C# del lanzador portÃ¡til optimizado
+â”œâ”€â”€ assets\
+â”‚   â”œâ”€â”€ logo.ico                   <-- Icono oficial de PhotoAura Studio (mÃºltiples escalas)
+â”‚   â”œâ”€â”€ logo.png                   <-- Logo de alta resoluciÃ³n para la tienda y banners
+â”‚   â””â”€â”€ splash.png                 <-- Pantalla de carga Deep Velvet Violet
+â”œâ”€â”€ scripts\
+â”‚   â”œâ”€â”€ setup_workspace.ps1        <-- Descarga inicial e instalaciÃ³n aislada de GIMP
+â”‚   â”œâ”€â”€ apply_branding.ps1         <-- Script maestro de rebranding estÃ©tico y funcional
+â”‚   â”œâ”€â”€ rebrand_translations.py    <-- Script Python de parcheo de binarios locales (.mo)
+â”‚   â””â”€â”€ shift_hue.py               <-- Utilidad de procesamiento de tono violeta para iconos
+â”œâ”€â”€ packaging\
+â”‚   â”œâ”€â”€ build_and_sign_msix.ps1    <-- Pipeline de empaquetado automatizado MSIX
+â”‚   â”œâ”€â”€ PhotoAuraStudio.msix       <-- Instalador final firmado listo para la tienda
+â”‚   â”œâ”€â”€ PhotoAuraStudio_TestCert.cer <-- Certificado digital pÃºblico de desarrollo
+â”‚   â””â”€â”€ PhotoAuraStudio_TestCert.pfx <-- Clave privada de firma local
+â”œâ”€â”€ docs\
+â”‚   â””â”€â”€ aprendizajes_empaquetado.md <-- BitÃ¡cora tÃ©cnica y resoluciÃ³n de fallos (twain.exe, etc.)
+â””â”€â”€ PrivacyPolicies\
+    â””â”€â”€ photoaurastudio\
+        â””â”€â”€ index.html             <-- PolÃ­tica de Privacidad oficial para la Microsoft Store
 ```
 
 ---
 
-## 3. Codigo Fuente del Lanzador (C#)
+## 3. CÃ³digo Fuente del Lanzador Optimizado (C#)
 
-Este codigo compila a un ejecutable silencioso (`Lanzador.exe`). Su funcion es establecer las variables de entorno de perfil y ejecutar GIMP de forma transparente, heredando cualquier ruta de imagen que el usuario arrastre al icono.
+Este ejecutable silencioso (`Lanzador.exe`) se encarga de aislar por completo el perfil de configuraciÃ³n de GIMP dentro de la carpeta local de la aplicaciÃ³n, haciÃ©ndolo 100% portable e independiente. AdemÃ¡s, inyecta dinÃ¡micamente las rutas de bibliotecas en la variable de entorno `PATH` para evitar fallos de carga DLL bajo el sandbox de Windows MSIX.
 
-Ubicacion del archivo: `c:\photo\src\Launcher.cs`
+UbicaciÃ³n del archivo: `c:\photo\src\Launcher.cs`
 
 ```csharp
 using System;
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+[assembly: AssemblyTitle("PhotoAura Studio")]
+[assembly: AssemblyDescription("Lanzador Independiente para PhotoAura Studio")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("PhotoAura Studio")]
+[assembly: AssemblyProduct("PhotoAura Studio")]
+[assembly: AssemblyCopyright("Copyright Â© 2026 PhotoAura Studio")]
+[assembly: AssemblyTrademark("PhotoAura Studio")]
+[assembly: AssemblyCulture("")]
+[assembly: ComVisible(false)]
+[assembly: Guid("d3b07384-ad3b-4c2c-8cb4-3e9a4d2f099c")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 namespace BrandedGimpLauncher
 {
@@ -67,29 +92,42 @@ namespace BrandedGimpLauncher
         {
             try
             {
+                // 1. Obtener la ruta base donde se ejecuta este Lanzador
                 string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                // 2. Definir la ruta del perfil interno autocompletado con PhotoGIMP
                 string profileDirectory = Path.Combine(baseDirectory, "app", "perfil_photogimp");
 
+                // Crear el directorio de perfil si no existe para evitar fallos de inicio
                 if (!Directory.Exists(profileDirectory))
                 {
                     Directory.CreateDirectory(profileDirectory);
                 }
 
-                // Redireccionar el directorio de configuracion del usuario a nuestra carpeta local
+                // 3. Establecer las variables de entorno para que GIMP trabaje en modo portable e independiente
                 Environment.SetEnvironmentVariable("GIMP2_DIRECTORY", profileDirectory);
                 Environment.SetEnvironmentVariable("GIMP3_DIRECTORY", profileDirectory);
 
-                // Buscar el ejecutable original de GIMP
+                // 4. Buscar el ejecutable de GIMP dentro de nuestro paquete
                 string gimpExePath = Path.Combine(baseDirectory, "app", "bin", "gimp-2.10.exe");
+                
+                // Intentar buscar 'gimp.exe' si 'gimp-2.10.exe' no existe (por compatibilidad)
                 if (!File.Exists(gimpExePath))
                 {
                     gimpExePath = Path.Combine(baseDirectory, "app", "bin", "gimp.exe");
                 }
 
+                string binDirectory = Path.GetDirectoryName(gimpExePath);
+                
+                // 4.5. Inyectar el directorio bin en la variable PATH para el entorno de MSIX
+                string currentPath = Environment.GetEnvironmentVariable("PATH") ?? "";
+                Environment.SetEnvironmentVariable("PATH", binDirectory + ";" + currentPath);
+
+                // Si no se encuentra GIMP, notificar al usuario de forma amigable
                 if (!File.Exists(gimpExePath))
                 {
                     MessageBox.Show(
-                        "Error al iniciar el editor de fotos:\nNo se pudo encontrar el motor grafico interno en la ruta:\n\n" + gimpExePath + "\n\nVerifica que la carpeta 'app' contenga una instalacion valida de GIMP.",
+                        "Error al iniciar el editor de fotos:\nNo se pudo encontrar el motor grÃ¡fico interno en la ruta esperada:\n\n" + gimpExePath + "\n\nPor favor, verifica que la carpeta 'app' contenga una instalaciÃ³n vÃ¡lida de GIMP.",
                         "Error de Inicio",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error
@@ -97,10 +135,12 @@ namespace BrandedGimpLauncher
                     return;
                 }
 
-                // Forwarding de argumentos de archivo (drag & drop de imagenes)
+                // 5. Preparar los argumentos para iniciar GIMP.
+                // Si el usuario arrastrÃ³ un archivo al Lanzador, se lo pasamos a GIMP.
                 string arguments = "";
                 if (args.Length > 0)
                 {
+                    // Unir y escapar los argumentos de ruta de archivo
                     for (int i = 0; i < args.Length; i++)
                     {
                         arguments += "\"" + args[i] + "\" ";
@@ -108,6 +148,7 @@ namespace BrandedGimpLauncher
                     arguments = arguments.TrimEnd();
                 }
 
+                // 6. Iniciar GIMP de manera transparente
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = gimpExePath;
                 startInfo.Arguments = arguments;
@@ -116,14 +157,14 @@ namespace BrandedGimpLauncher
 
                 using (Process gimpProcess = Process.Start(startInfo))
                 {
-                    // El lanzador finaliza inmediatamente y deja correr a GIMP
+                    // El lanzador finaliza y deja que el motor de GIMP corra de forma independiente
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Ocurrio un error inesperado al intentar iniciar el editor:\n\n" + ex.Message,
-                    "Error Critico",
+                    "OcurriÃ³ un error inesperado al intentar iniciar el editor:\n\n" + ex.Message,
+                    "Error CrÃ­tico",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
@@ -135,219 +176,46 @@ namespace BrandedGimpLauncher
 
 ---
 
-## 4. Script de Automatizacion (`setup_workspace.ps1`)
+## 4. Script de PreparaciÃ³n Inicial del Workspace (`scripts/setup_workspace.ps1`)
 
-Este script en PowerShell automatiza todo el proceso de descarga, extraccion, fusion de archivos y compilacion en tu propia maquina de desarrollo.
+Este script descarga el instalador oficial de GIMP y el perfil optimizado de PhotoGIMP de forma segura, y los extrae en el subdirectorio aislado `build\app\`.
 
-Ubicacion del archivo: `c:\photo\setup_workspace.ps1`
-
-```powershell
-# Script de Preparacion de Entorno para Editor de Fotos de Marca Propia
-# Ejecutar en PowerShell como Administrador desde c:\photo
-
-$ErrorActionPreference = "Stop"
-$ProgressPreference = "SilentlyContinue" # Deshabilita barra de progreso para maxima velocidad de descarga
-
-Write-Output "Iniciando preparacion del proyecto..."
-
-# 1. Crear directorios de trabajo
-$BuildDir = "c:\photo\build"
-$AppDir = "c:\photo\build\app"
-$SrcFile = "c:\photo\src\Launcher.cs"
-
-if (!(Test-Path "c:\photo\src")) { New-Item -ItemType Directory -Path "c:\photo\src" | Out-Null }
-if (!(Test-Path $BuildDir)) { New-Item -ItemType Directory -Path $BuildDir | Out-Null }
-if (!(Test-Path $AppDir)) { New-Item -ItemType Directory -Path $AppDir | Out-Null }
-
-$WebClient = New-Object System.Net.WebClient
-$WebClient.Headers.Add("User-Agent", "Mozilla/5.0")
-
-# 2. Descargar GIMP (Asegurar que el archivo no este incompleto)
-$GimpInstallerPath = "c:\photo\gimp_setup.exe"
-if (Test-Path $GimpInstallerPath) {
-    $GimpSize = (Get-Item $GimpInstallerPath).Length
-    if ($GimpSize -lt 150MB) {
-        Write-Output "Detectado instalador de GIMP incompleto ($($GimpSize / 1MB) MB). Eliminando para re-descargar..."
-        Remove-Item -Force $GimpInstallerPath
-    }
-}
-
-if (!(Test-Path $GimpInstallerPath)) {
-    Write-Output "Descargando instalador de GIMP (aprox. 200MB)..."
-    $GimpUrl = "https://download.gimp.org/gimp/v2.10/windows/gimp-2.10.38-setup.exe"
-    $WebClient.DownloadFile($GimpUrl, $GimpInstallerPath)
-    Write-Output "Descarga de GIMP finalizada."
-} else {
-    Write-Output "Instalador de GIMP ya descargado y verificado."
-}
-
-# 3. Descargar PhotoGIMP (Asegurar que el archivo no este incompleto)
-$PhotoGimpZipPath = "c:\photo\photogimp.zip"
-if (Test-Path $PhotoGimpZipPath) {
-    $PhotoGimpSize = (Get-Item $PhotoGimpZipPath).Length
-    if ($PhotoGimpSize -lt 1MB) {
-        Write-Output "Detectado zip de PhotoGIMP incompleto. Eliminando para re-descargar..."
-        Remove-Item -Force $PhotoGimpZipPath
-    }
-}
-
-if (!(Test-Path $PhotoGimpZipPath)) {
-    Write-Output "Descargando parche de PhotoGIMP..."
-    $PhotoGimpUrl = "https://github.com/Diolinux/PhotoGIMP/archive/refs/heads/master.zip"
-    $WebClient.DownloadFile($PhotoGimpUrl, $PhotoGimpZipPath)
-    Write-Output "Descarga de PhotoGIMP finalizada."
-} else {
-    Write-Output "Parche de PhotoGIMP ya descargado."
-}
-
-# 4. Extraer / Instalar silenciosamente GIMP en la carpeta build\app
-Write-Output "Extrayendo motor de GIMP silenciosamente en build\app..."
-# Flag /DIR=... especifica donde instalar de forma aislada
-Start-Process -FilePath $GimpInstallerPath -ArgumentList "/VERYSILENT", "/NORESTART", "/ALLUSERS", "/SUPPRESSMSGBOXES", "/DIR=`"$AppDir`"" -Wait
-
-# 5. Extraer y colocar PhotoGIMP en build\app\perfil_photogimp
-Write-Output "Configurando perfil de PhotoGIMP..."
-$TempExtract = "c:\photo\temp_photogimp"
-if (Test-Path $TempExtract) { Remove-Item -Recurse -Force $TempExtract }
-Expand-Archive -Path $PhotoGimpZipPath -DestinationPath $TempExtract
-
-# Mapear los archivos de PhotoGIMP al directorio de perfil local de nuestra app
-# PhotoGIMP master tiene la ruta .config/GIMP/3.0/ en su repositorio actualizado
-$ConfigOrigPath = Join-Path $TempExtract "PhotoGIMP-master\.config\GIMP\3.0"
-$DestProfilePath = Join-Path $AppDir "perfil_photogimp"
-
-if (Test-Path $DestProfilePath) { Remove-Item -Recurse -Force $DestProfilePath }
-Copy-Item -Path $ConfigOrigPath -Destination $DestProfilePath -Recurse -Force
-
-# Limpiar los splashes por defecto del perfil de PhotoGIMP y reemplazar con nuestro splash de marca
-$ProfileSplashDir = Join-Path $DestProfilePath "splashes"
-$AssetsSplash = "c:\photo\assets\splash.png"
-if (Test-Path $ProfileSplashDir) {
-    Remove-Item -Path (Join-Path $ProfileSplashDir "*") -Force -ErrorAction SilentlyContinue
-    if (Test-Path $AssetsSplash) {
-        Copy-Item -Path $AssetsSplash -Destination (Join-Path $ProfileSplashDir "gimp-splash.png") -Force
-    }
-}
-
-# Desactivar la comprobacion de actualizaciones para evitar notificaciones de gimp.org
-Write-Output "Desactivando comprobacion de actualizaciones en gimprc..."
-Add-Content -Path (Join-Path $DestProfilePath "gimprc") -Value "`n(check-updates no)"
-
-# Personalizar el titulo de la ventana principal de edicion para mostrar nuestra marca
-Write-Output "Personalizando titulo de ventana en gimprc..."
-Add-Content -Path (Join-Path $DestProfilePath "gimprc") -Value "`n(image-title-format `"%D*%f-%p.%i (%t, %o, %L) %wx%h - PhotoAura Studio`")"
-
-# Limpiar extraccion temporal
-Remove-Item -Recurse -Force $TempExtract
-
-# 6. Compilar el Lanzador en C#
-Write-Output "Compilando lanzador C# (Lanzador.exe)..."
-$CscPath = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
-$IcoPath = "c:\photo\assets\logo.ico"
-if (Test-Path $CscPath) {
-    # Compilar como Windows Application (/target:winexe) para ocultar consola y añadir referencia a Windows Forms
-    if (Test-Path $IcoPath) {
-        & $CscPath /target:winexe /win32icon:$IcoPath /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
-    } else {
-        & $CscPath /target:winexe /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
-    }
-    Write-Output "Compilacion exitosa! Ejecutable creado en $BuildDir\Lanzador.exe"
-} else {
-    Write-Warning "No se encontro el compilador csc.exe de .NET Framework por defecto en tu maquina."
-}
-
-Write-Output "--------------------------------------------------------"
-Write-Output "Configuracion completa!"
-Write-Output "La carpeta '$BuildDir' contiene tu aplicacion de marca propia."
-Write-Output "--------------------------------------------------------"
-```
+UbicaciÃ³n del archivo: `c:\photo\scripts\setup_workspace.ps1`
 
 ---
 
-## 5. Personalizacion de Marca (Rebranding)
+## 5. Script Maestro de Rebranding (`scripts/apply_branding.ps1`)
 
-Para cambiar totalmente la apariencia y hacerla lucir como tu propia aplicacion comercial:
+Este potente script de automatizaciÃ³n ejecuta de forma secuencial todo el proceso de personalizaciÃ³n estÃ©tica y de seguridad del editor:
 
-### Reemplazar la Pantalla de Carga (Splash Screen)
-1. Diseña una imagen `.png` en formato horizontal (por ejemplo de `800x480` pixeles) con tu logotipo y nombre de marca.
-2. Reemplaza el archivo original en la ruta:
-   `c:\photo\build\app\share\gimp\2.0\images\gimp-splash.png`
-   por tu diseño (conservando exactamente el nombre `gimp-splash.png`).
-
-### Reemplazar Icono del Ejecutable
-Para cambiar el icono de `Lanzador.exe`, puedes indicarle al compilador `csc.exe` que le asocie un archivo de icono `.ico` añadiendo el parametro `/win32icon:ruta\tu_icono.ico` durante la compilacion.
-
-### Modificar textos de GIMP ("GIMP" -> "TuMarca") sin recompilar
-Para cambiar el nombre que aparece en la barra de titulo y en los menus:
-1. Instala una herramienta como **Poedit** o el comando de Gettext `msgunfmt`.
-2. Ubica el archivo de idioma en español:
-   `c:\photo\build\app\share\locale\es\LC_MESSAGES\gimp20.mo`
-3. Descompila el archivo `.mo` a `.po` (texto plano):
-   `msgunfmt.exe gimp20.mo -o gimp20.po`
-4. Abre `gimp20.po` en un editor de texto y busca la palabra `"GIMP"` o `"Programa de Manipulación de Imágenes de GNU"`. Reemplazalas por tu nombre de marca.
-5. Vuelve a compilar el archivo a formato binario `.mo`:
-   `msgfmt.exe gimp20.po -o gimp20.mo`
-6. Reemplaza el archivo original por tu version parcheada.
-
-### Desactivar la Alerta de Actualizacion ("¡Actualizacion disponible!")
-Para evitar que tus usuarios sean invitados a descargar e instalar la version gratuita oficial de GIMP en su PC (lo que arruinaria la experiencia de tu marca), el script de preparacion añade automaticamente la directiva `(check-updates no)` al archivo de configuracion `gimprc` del perfil local. Esto deshabilita por completo las comprobaciones de actualizacion en red y oculta el recuadro negro de alertas.
-
-### Manejo del Dialogo "Acerca de GIMP" (Mascota Wilber y Creditos)
-El dialogo oficial de informacion ("Acerca de...") que muestra la mascota Wilber y los creditos originales (Spencer Kimball, Peter Mattis, etc.) es un recurso interno y no debe modificarse:
-* **Cumplimiento Obligatorio de Licencia (GPLv3 Seccion 7):** La licencia GPLv3 exige expresamente conservar intactos todos los avisos de derechos de autor, licencias y creditos que se muestren de cara al usuario final (las llamadas "Appropriate Legal Notices").
-* **Tu Escudo Legal Definitivo:** Mantener esta ventana de creditos visible demuestra transparencia. Al declarar abiertamente que tu aplicacion utiliza y apoya el motor GIMP bajo GPLv3, te blindas juridicamente contra cualquier reclamacion de plagio o mal uso de marcas de terceros.
+1. **InyecciÃ³n de Identidad de Marca:** Reemplaza la pantalla de carga original (`splash.png`) por la pantalla oficial violeta de PhotoAura Studio.
+2. **Branding Visual Violeta en Iconos:** Modifica los iconos nativos del sistema GTK aplicando algoritmos de cambio de tono de color para lograr un estilo de marca coherente.
+3. **DesactivaciÃ³n de Alertas de ActualizaciÃ³n:** Inyecta en el archivo de configuraciÃ³n `gimprc` local las propiedades `(check-updates no)` para que la aplicaciÃ³n funcione de forma offline y aislada de avisos de actualizaciÃ³n externos.
+4. **Parcheo de Traducciones (Gettext):** Llama a un script de Python de forma local que descompila y modifica los archivos binarios de localizaciÃ³n (`gimp20.mo`) para reemplazar las cadenas de texto del tÃ­tulo del editor por la marca registrada **"PhotoAura Studio (based on GIMP)"**.
+5. **MitigaciÃ³n de Errores de Arquitectura de Bits (STATUS_INVALID_IMAGE_FORMAT):** Localiza y remueve de forma automÃ¡tica plug-ins de 32 bits problemÃ¡ticos (`twain.exe`) que colisionan con las llamadas a librerÃ­as de 64 bits bajo el entorno virtual de MSIX.
 
 ---
 
-## 6. Creacion del Instalador MSIX y Publicacion
+## 6. Pipeline de Empaquetado Automatizado MSIX (`packaging/build_and_sign_msix.ps1`)
 
-Para poder subir tu aplicacion a la **Microsoft Store**, debes empaquetarla en formato MSIX:
-
-1. **Descargar MSIX Packaging Tool:** Instala la aplicacion oficial *MSIX Packaging Tool* de Microsoft desde la Microsoft Store de forma gratuita.
-2. **Crear Paquete desde Carpeta Existente:**
-   * Abre la herramienta y selecciona "Application Package".
-   * Selecciona como directorio de origen de la aplicacion la carpeta `c:\photo\build\`.
-   * Indica que el archivo ejecutable principal (Entry Point) es `Lanzador.exe`.
-3. **Definir Identidad del Paquete:**
-   * Completa los campos con la informacion del **Microsoft Partner Center** (Nombre del paquete, Publisher ID, version, etc.).
-4. **Firmar el paquete:** Genera y asocia un certificado digital de pruebas para probar la instalacion local, o firma con la clave proporcionada por Microsoft.
-5. **Subir al Partner Center:** Ingresa a tu cuenta de desarrollador de Microsoft, crea una nueva ficha de aplicacion, sube tu archivo `.msix` generado y envialo a revision para su publicacion.
+Una vez preparado y personalizado el espacio de trabajo en `build\`, este script ejecuta de forma automÃ¡tica:
+1. **CompilaciÃ³n del Paquete:** Invoca la utilidad oficial `makeappx.exe` de Microsoft Windows SDK para compilar la carpeta `build\` en el contenedor de aplicaciÃ³n empaquetada `PhotoAuraStudio.msix`.
+2. **GeneraciÃ³n de Firma Digital:** Crea un certificado digital autofirmado `.pfx` con la informaciÃ³n del editor asociada al Microsoft Partner Center.
+3. **Firma del Binario:** Ejecuta `signtool.exe` sobre el archivo `.msix` para inyectarle la firma digital, permitiendo la instalaciÃ³n en cualquier mÃ¡quina de pruebas local o el envÃ­o directo a la plataforma de Microsoft.
 
 ---
 
-## 7. Fichas de Tienda Oficiales y Descripcion Legal (Copy-Paste)
+## 7. Publicacion Microsoft Store y Agente WS
 
-Para garantizar la legalidad bajo la licencia **GNU GPLv3** y las politicas de la **Microsoft Store** (o cualquier App Store/Play Store donde se decida publicar en el futuro), debes utilizar las siguientes plantillas oficiales de descripcion:
+La documentacion canonica de tienda, identidad, fichas por idioma y automatizacion de la Microsoft Store vive ahora dentro de `c:\photo\agente_de_ws\`.
 
-### Plantilla de la Ficha en Español
+Rutas principales:
 
-> **PhotoAura Studio (based on GIMP)**
-> 
-> PhotoAura Studio es una potente suite de edicion fotografica y diseño vectorial profesional diseñada para ofrecer una experiencia optimizada, rapida y lista para usar en Windows 10 y 11.
-> 
-> **Características Principales:**
-> * **Interfaz Optimizada:** Configurada con una distribucion de herramientas de alta productividad y atajos de teclado familiares, ideal para creadores de contenido, diseñadores y fotografos.
-> * **Tema Deep Velvet Violet:** Estilo de interfaz diseñado especificamente para reducir la fatiga ocular durante largas sesiones de edicion.
-> * **Iconos Simbólicos Planos:** Carga del tema de iconos vectoriales planos monocromaticos para un acabado limpio y profesional de alta precision.
-> * **Modo Portable Seguro:** Funciona en un sandbox aislado sin interferir con otras instalaciones locales.
-> 
-> **Nota sobre Licencia y Transparencia:**
-> PhotoAura Studio es un producto independiente basado en el motor de codigo abierto GNU Image Manipulation Program (GIMP) y la preconfiguracion de PhotoGIMP de Diolinux, optimizado y empaquetado bajo los terminos de la licencia publica **GNU GPLv3**. 
-> La compra de este paquete en la tienda representa un pago opcional por la conveniencia de una instalacion limpia con un solo clic, actualizaciones automaticas integradas y soporte tecnico dedicado para Windows. Este producto no esta afiliado con el equipo de desarrollo de GIMP ni con Diolinux. El codigo fuente completo de nuestro launcher y scripts de integracion esta a disposicion de la comunidad en nuestro repositorio de GitHub: https://github.com/huskyCodeAI/PhotoAura-Studio
+* `agente_de_ws\README.md` - Indice operativo del agente.
+* `agente_de_ws\docs\official-api-reference.md` - Referencia de la Microsoft Store Submission API oficial para MSI/EXE.
+* `agente_de_ws\docs\portable-project-structure.md` - Guia para reutilizar el agente en otros proyectos.
+* `agente_de_ws\projects\photoaura\identity\store-identity.md` - Identidad Store de PhotoAura.
+* `agente_de_ws\projects\photoaura\listings\en-us.md` - Ficha en ingles.
+* `agente_de_ws\projects\photoaura\listings\es-es.md` - Ficha en espanol.
 
-### Plantilla de la Ficha en Inglés (English Storefront Template)
-
-> **PhotoAura Studio (based on GIMP)**
-> 
-> PhotoAura Studio is a powerful professional photo editing and digital design suite optimized for Windows 10 and 11, designed to deliver a streamlined, out-of-the-box creative workflow.
-> 
-> **Key Features:**
-> * **Optimized Workspace:** Pre-configured with a highly productive tool layout and familiar keyboard shortcuts, perfect for content creators, designers, and photographers.
-> * **Deep Velvet Violet Theme:** A modern, dark visual theme designed to minimize eye strain and maximize color focus during long creative sessions.
-> * **Symbolic Flat Icons:** High-contrast, clean vector monochrome icons that provide a professional, precise, and clutter-free interface.
-> * **Secure Portable Mode:** Fully isolated sandbox run environment that will not interfere with other local software installations.
-> 
-> **Licensing and Transparency Notice:**
-> PhotoAura Studio is an independent distribution built upon the open-source GNU Image Manipulation Program (GIMP) engine and the PhotoGIMP layout by Diolinux, compiled and packaged in accordance with the **GNU GPLv3** license terms. 
-> Purchasing this app from the store represents a voluntary payment for the convenience of one-click installation, automatic software updates, and dedicated Windows technical support. This application is not officially affiliated with the GIMP development team or Diolinux. The complete source code of our launcher and packaging scripts is fully open to the public on GitHub: https://github.com/huskyCodeAI/PhotoAura-Studio
-
+Esta concentracion evita duplicar textos entre la raiz del repo y el agente, y permite portar `agente_de_ws` a otro producto cambiando `STORE_PROJECT_SLUG`, `STORE_PRODUCT_ID`, `SELLER_ID` y los archivos de `projects\<slug>\`.

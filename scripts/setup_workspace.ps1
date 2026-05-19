@@ -107,9 +107,9 @@ $IcoPath = "c:\photo\assets\logo.ico"
 if (Test-Path $CscPath) {
     # Compilar como Windows Application (/target:winexe) para ocultar consola y añadir referencia a Windows Forms
     if (Test-Path $IcoPath) {
-        & $CscPath /target:winexe /win32icon:$IcoPath /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
+        & $CscPath /platform:x64 /target:winexe /win32icon:$IcoPath /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
     } else {
-        & $CscPath /target:winexe /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
+        & $CscPath /platform:x64 /target:winexe /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
     }
     Write-Output "Compilacion exitosa! Ejecutable creado en $BuildDir\Lanzador.exe"
 } else {
@@ -118,7 +118,7 @@ if (Test-Path $CscPath) {
 
 # 7. Aplicar Rebranding de Traducciones y Logos Internos
 Write-Output "Aplicando rebranding en archivos de lenguaje y logos internos..."
-$PythonScript = "c:\photo\rebrand_translations.py"
+$PythonScript = "c:\photo\scripts\rebrand_translations.py"
 if (Test-Path $PythonScript) {
     & python $PythonScript
 }

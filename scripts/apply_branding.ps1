@@ -11,6 +11,25 @@ $AppDir = "c:\photo\build\app"
 $AssetsDir = "c:\photo\assets"
 $SrcFile = "c:\photo\src\Launcher.cs"
 
+# 0. Eliminar DLLs de depuracion del sistema y ejecutables de arquitectura incompatible (32-bit vs 64-bit) que causan el error 0xc00007b
+$GimpBinDir = Join-Path $AppDir "bin"
+if (Test-Path $GimpBinDir) {
+    $ConflictingDlls = @("dbgcore.dll", "dbghelp.dll")
+    foreach ($Dll in $ConflictingDlls) {
+        $DllPath = Join-Path $GimpBinDir $Dll
+        if (Test-Path $DllPath) {
+            Remove-Item -Path $DllPath -Force
+            Write-Output "Eliminada DLL conflictiva para evitar error 0xc00007b: $Dll"
+        }
+    }
+}
+
+$TwainDir = Join-Path $AppDir "lib\gimp\2.0\plug-ins\twain"
+if (Test-Path $TwainDir) {
+    Remove-Item -Path $TwainDir -Recurse -Force
+    Write-Output "Eliminado directorio plug-in TWAIN de 32-bits para evitar error 0xc00007b en el contenedor MSIX."
+}
+
 # 1. Crear directorio de assets si no existe
 if (!(Test-Path $AssetsDir)) {
     New-Item -ItemType Directory -Path $AssetsDir | Out-Null
@@ -120,9 +139,9 @@ Write-Output "Recompilando Lanzador.exe con el icono embebido..."
 $CscPath = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
 if (Test-Path $CscPath) {
     if (Test-Path $IcoDest) {
-        & $CscPath /target:winexe /win32icon:$IcoDest /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
+        & $CscPath /platform:x64 /target:winexe /win32icon:$IcoDest /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
     } else {
-        & $CscPath /target:winexe /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
+        & $CscPath /platform:x64 /target:winexe /out:"$BuildDir\Lanzador.exe" /r:System.Windows.Forms.dll,System.dll,System.Drawing.dll $SrcFile
     }
     Write-Output "¡Recompilacion de Lanzador.exe exitosa!"
 } else {
@@ -131,7 +150,7 @@ if (Test-Path $CscPath) {
 
 # 5. Aplicar Rebranding de Traducciones y Logos Internos
 Write-Output "Aplicando rebranding en archivos de lenguaje y logos internos..."
-$PythonScript = "c:\photo\rebrand_translations.py"
+$PythonScript = "c:\photo\scripts\rebrand_translations.py"
 if (Test-Path $PythonScript) {
     & python $PythonScript
 }

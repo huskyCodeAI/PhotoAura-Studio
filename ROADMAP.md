@@ -1,61 +1,66 @@
 # ROADMAP: PhotoAura Studio (based on GIMP)
 
-This document outlines the development roadmap, current progress, and next steps for the production and publication of PhotoAura Studio on the Microsoft Store.
+Este documento describe el mapa de ruta del desarrollo, el progreso actual y los hitos alcanzados en el empaquetado, rebranding y publicación de **PhotoAura Studio** en la Microsoft Store para Windows.
 
 ---
 
-## Technical Concept
-PhotoAura Studio is a professional, standalone, and portable image editing suite for Windows based on the GIMP engine and pre-configured with a streamlined UI layout. It runs in isolated user space without altering any existing GIMP configurations on the user's computer.
+## Concepto Técnico
+PhotoAura Studio es una suite de edición fotográfica profesional, independiente y portable para Windows basada en el motor de código abierto de GIMP y el perfil preconfigurado de PhotoGIMP. Se ejecuta en un espacio de usuario aislado sin alterar ninguna instalación o perfil preexistente en el sistema operativo del usuario.
 
 ---
 
-## Phase 1: Branding and User Experience (Completed)
+## Fase 1: Marca y Experiencia de Usuario (Completado)
 
-- [x] **Silent Windows Launcher Compilation**
-  - Compiled custom lightweight C# executable (`Lanzador.exe`) that isolates GIMP's profile directories to the application's local folders.
-  - Custom branded high-resolution Windows icon embedded directly inside `Lanzador.exe` using native compiler assets.
-  - Created automatic Windows Shortcuts (`PhotoAura Studio.lnk`) in the project directory and on the user's Desktop with the custom premium icon explicitly linked.
+- [x] **Compilación del Lanzador Silencioso en C#**
+  - Compilación de un binario nativo ligero (`Lanzador.exe`) que aísla de forma virtual los directorios del perfil de GIMP a las subcarpetas del paquete de la aplicación.
+  - Icono premium de alta resolución incrustado directamente en el ejecutable principal.
+  - Creación automática de accesos directos de Windows (`PhotoAura Studio.lnk`) vinculados explícitamente a los activos de la marca.
 
-- [x] **Deep Velvet Violet Theme**
-  - Integrated custom Deep Velvet Violet styling (`#120a1f` base background) to replace GIMP's default gray interfaces.
-  - Fully rebranded GIMP's default "Dark" theme internally as Deep Velvet Violet, ensuring it loads automatically.
-  - Added CSS rule overrides to camouflage Wilber silhouette assets inside canvas rendering widgets.
+- [x] **Tema Visual Terciopelo Violeta Profundo (Deep Velvet Violet)**
+  - Integración de una paleta estética moderna y elegante (fondo `#120a1f`) para sustituir el clásico gris neutro de GIMP.
+  - Personalización a nivel de CSS y archivos `gtkrc` para ocultar la silueta por defecto del lienzo del editor, logrando un espacio de trabajo profesional libre de distracciones.
 
-- [x] **High-Resolution Premium Brand Icons**
-  - Generated a breathtaking, modern, and professional glassmorphic app icon (`logo.png`/`logo.ico`) with multiple Windows-compatible resolutions.
-  - Deep-rebranded GIMP's icon theme to load our gorgeous new brand logo natively in all scales and vectors (using base64-encoded SVG injections). GIMP's window icon, taskbar shortcut, toolbox header, and about screens now show the brand new logo natively instead of the default mascot.
+- [x] **Logotipo e Iconografía Premium**
+  - Diseño y generación de un isotipo e icono glassmórfico elegante compatible con múltiples resoluciones de pantalla y sistemas operativos.
+  - Parcheo en caliente del motor de iconos vectoriales planos y monocromáticos nativos para cargar el nuevo logo de marca en todos los paneles, barra de tareas e interfaces.
 
-- [x] **Clean Canvas Workspace (Wilber Masquerade)**
-  - Fully rebranded GIMP's internal files and hidden default assets to provide a beautiful, clean, and modern editing space.
+- [x] **Sanitización del Lienzo de Trabajo**
+  - Ocultación completa de Wilber (la mascota original de GIMP) en el panel de herramientas (`toolbox-wilber no`), barra de título y pantallas secundarias para una imagen corporativa unificada.
 
-- [x] **GIMP Mascot Wilber Hidden from Tools**
-  - Injected configuration rules (`toolbox-wilber no`) to remove GIMP's branding mascot from the toolbox sidebar.
-
-- [x] **English Window Title Rebranding**
-  - Translated GIMP's core localization catalog (`gimp20.mo`) to display `"PhotoAura Studio (based on GIMP)"` as the primary editor window title for English locales, ensuring complete transparency and compliance.
+- [x] **Personalización de Título y Textos Locales**
+  - Descompilación y edición de los catálogos de localización (`gimp20.mo`) para presentar la marca oficial "PhotoAura Studio (based on GIMP)" de forma transparente y legal.
 
 ---
 
-## Phase 2: Packaging and MSIX Deployment (Current Phase)
+## Fase 2: Empaquetado y Aislamiento MSIX (Completado)
 
-- [ ] **AppX Manifest Definition**
-  - Generate the official `AppxManifest.xml` listing launch arguments, capabilities, and file association details for PhotoAura Studio.
+- [x] **Definición del Manifiesto AppX (`AppxManifest.xml`)**
+  - Estructuración de las propiedades del contenedor UWP/MSIX (nombre del paquete, Publisher ID, dependencias de Windows SDK y capacidades).
+  - Inyección de la política de sobreescritura de directorios de búsqueda de dependencias (`uap6:LoaderSearchPathOverride`) apuntando a la carpeta de binarios (`app\bin`) para resolver la carga dinámica de DLLs en el entorno virtualizado.
 
-- [ ] **Assets Packaging**
-  - Create the standard package visual asset grid (Square 44x44, Square 150x150, Wide 310x150, Store Logo) utilizing the custom brand assets.
+- [x] **Empaquetado de Activos Visuales**
+  - Diseño del grid de logotipos del sistema (Square 44x44, Square 150x150, Wide 310x150, Store Logo) en escala de grises y color con el logotipo de PhotoAura Studio.
 
-- [ ] **MSIX Container Build**
-  - Compile the compiled `build` workspace folder into a signed, self-contained Windows App Package (`.msix`) using the Microsoft MSIX Packaging Tool or Command Line compiler.
+- [x] **Resolución del Error de Arquitectura Híbrida (`0xc00007b`)**
+  - Identificación y eliminación del plug-in TWAIN de 32 bits (`twain.exe`) en el directorio de complementos, evitando el choque de bits con librerías nativas de 64 bits dentro del sandbox de MSIX.
+
+- [x] **Pipeline de Compilación Automática (`packaging/build_and_sign_msix.ps1`)**
+  - Script automatizado en PowerShell que invoca la herramienta de empaquetado `makeappx.exe` de Microsoft y firma digitalmente el binario final mediante `signtool.exe` con una clave de firma local autorizada `.pfx`.
 
 ---
 
-## Phase 3: Microsoft Partner Center & Store Release (Upcoming)
+## Fase 3: Publicación y Fichas de Tienda (Completado)
 
-- [ ] **Publisher Certification**
-  - Sign the `.msix` package with the developer publisher certificate generated from the Microsoft Partner Center.
+- [x] **Generación y Despliegue de Política de Privacidad**
+  - Creación, traducción y maquetación interactiva de la Política de Privacidad de PhotoAura Studio (requisito obligatorio de la tienda).
+  - Alojamiento y despliegue público en GitHub Pages: [https://huskycodeai.github.io/PrivacyPolicies/photoaurastudio/](https://huskycodeai.github.io/PrivacyPolicies/photoaurastudio/)
 
-- [ ] **Store Listing Creation**
-  - Prepare store listing copy in English and Spanish, clearly describing the application features and explicitly stating that it is based on the open-source GIMP engine under the GNU GPLv3 license.
+- [x] **Firma Digital con el Certificado de Producción**
+  - Vinculación del editor y firma digital definitiva del paquete de distribución MSIX con la identidad asignada en la consola de Microsoft Partner Center.
 
-- [ ] **Submission & Publication**
-  - Upload the signed package to Partner Center, configure pricing model, pass automated app certification, and go live on the store.
+- [x] **Redacción Saneada de Fichas de la Tienda (Compliance)**
+  - Creación de descripciones de producto completas y listas de características (Features) en inglés y español.
+  - Sanitización estricta de las fichas para eliminar cualquier referencia a marcas comerciales de competidores (como Photoshop/Adobe) y evitar el rechazo de certificación de la tienda.
+
+- [x] **Subida y Envío a Certificación en el Partner Center**
+  - Envío exitoso del binario firmado a los servidores de Microsoft Store. La aplicación ya se encuentra enviada, validada en la consola y lista para su distribución comercial.
